@@ -9,6 +9,7 @@ import SwiftUI
 
 struct Homescreen: View {
     @State private var searchText = ""
+    @State private var openSheet: Bool = false
     var body: some View {
         NavigationStack {
             List {
@@ -35,10 +36,33 @@ struct Homescreen: View {
             }
             .toolbar {
                 ToolbarItemGroup(placement: .bottomBar) {
-                    NavigationLink {
-                        foldersDetails()
+                    Button {
+                        openSheet.toggle()
                     } label: {
                         Image(systemName: "folder.badge.plus")
+                    }
+                    .sheet(isPresented: $openSheet) {
+                        NavigationStack {
+                            Text("Hi")
+                                .navigationTitle("New Folder")
+                                .navigationBarTitleDisplayMode(.inline)
+                                .toolbar {
+                                    ToolbarItemGroup (placement: .bottomBar) {
+                                        Button {
+                                            openSheet.toggle()
+                                        } label: {
+                                            Text("Cancel")
+                                        }
+                                        Button {
+                                            openSheet.toggle()
+                                        } label: {
+                                            Text("Done")
+                                        }
+
+
+                                    }
+                                }
+                        }
                     }
                     NavigationLink {
                         foldersDetails()
@@ -47,7 +71,24 @@ struct Homescreen: View {
                     }
                 }
             }
-            .searchable(text: $searchText)
+            .searchable(text: $searchText) {
+                HStack {
+                    Image(systemName: "gear")
+                        .foregroundColor(Color.accentColor)
+                    Text("Shared Notes")
+                        .foregroundColor(Color.black)
+                        .font(.subheadline)
+                }
+                .searchCompletion("Shared Notes")
+                HStack {
+                    Image(systemName: "lock.fill")
+                        .foregroundColor(Color.accentColor)
+                    Text("Locked Notes")
+                        .foregroundColor(Color.black)
+                        .font(.subheadline)
+                }
+                .searchCompletion("Locked Notes")
+            }
         }
     }
 }
